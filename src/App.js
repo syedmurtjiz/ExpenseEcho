@@ -1,25 +1,32 @@
-import logo from './logo.svg';
+import React, { useState } from 'react';
+import { IncomeExpenses } from './components/IncomeExpenses';
+import { TransactionList } from './components/TransactionList';
+import { AddTransaction } from './components/AddTransaction';
 import './App.css';
 
-function App() {
+const App = () => {
+  const [transactions, setTransactions] = useState([]);
+
+  const addTransaction = (transaction) => {
+    setTransactions([...transactions, transaction]);
+  };
+
+  const totalIncome = transactions
+    .filter(transaction => transaction.amount > 0)
+    .reduce((acc, transaction) => acc + transaction.amount, 0);
+
+  const totalExpenses = transactions
+    .filter(transaction => transaction.amount < 0)
+    .reduce((acc, transaction) => acc + transaction.amount, 0);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className="container">
+      <h2>Expense Tracker</h2>
+      <IncomeExpenses income={totalIncome} expenses={totalExpenses} />
+      <TransactionList transactions={transactions} />
+      <AddTransaction addTransaction={addTransaction} />
     </div>
   );
-}
+};
 
 export default App;
